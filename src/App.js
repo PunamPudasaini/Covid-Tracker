@@ -1,25 +1,65 @@
-import logo from './logo.svg';
+
 import './App.css';
+import axios from 'axios';
+import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom"; 
+import Covidcard from './covid';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      covidData: [],
+      loading: true
+    }
+  }
+
+  componentDidMount(){
+    this.getRemoteDta();
+  }
+
+  getRemoteDta=( ) => {
+    let self = this;
+    axios.get(' https://coronavirus-19-api.herokuapp.com/countries')
+    .then(function (response) {
+      self.setState({
+        covidData:response.data,
+        loading: false
+      })
+      
+    }).catch(function (error) {
+
+      
+    })
+
+  }
+  render() { 
+    return (
+      <div style={{maxWidth:600, margin: '20px auto'}}>
+        {this.state.loading? <div> data is loading</div> :
+        <div>
+        {
+          this.state.covidData.map((data)=> 
+         < Covidcard data={data} />
+          )
+        }
+        </div>
+  }
+        
+        </div>
+        
+       
+     
+      );
+  }
 }
-
+ 
 export default App;
+
+
