@@ -16,6 +16,7 @@ class App extends Component {
     super(props);
     this.state = {
       covidData: [],
+      duplicateData:[],
       loading: true
     }
   }
@@ -30,6 +31,7 @@ class App extends Component {
     .then(function (response) {
       self.setState({
         covidData:response.data,
+        duplicateData:response.data,
         loading: false
       })
       
@@ -39,19 +41,49 @@ class App extends Component {
     })
 
   }
+
+  handleChange=(event)=>{
+    let duplicateData = this.state.duplicateData;
+    console.log(event.target.value);
+    let data = this.state.covidData.filter(function(val) {
+      if(val.country.toLowerCase().indexOf(event.target.value.toLowerCase())!=-1){
+        return val;
+      }
+      
+    });
+    this.setState({
+      duplicateData: data
+    })
+
+
+  };
+
   render() { 
     return (
-      <div style={{maxWidth:600, margin: '20px auto'}}>
-        {this.state.loading? <div> data is loading</div> :
+      <div>
+        <div className='head'>
+         <header className='header'>
+           <p className="para">Corona Tracer</p>
+          <input className='input' type='text' placeholder="search" onChange={this.handleChange} ></input>
+         </header>
+         </div>
+
+      <div style={{ margin: '20px auto', marginLeft: '20px', marginRight: '20px', padding: '8px'}}>
+       
+        {this.state.loading?
+         <div> data is loading</div> :
+
         <div>
+        
         {
-          this.state.covidData.map((data)=> 
+          this.state.duplicateData.map((data)=> 
          < Covidcard data={data} />
           )
         }
         </div>
-  }
-        
+  } 
+        </div>
+        <footer></footer>
         </div>
         
        
